@@ -1,9 +1,10 @@
-import React, { Component } from "react";
-// I wanna my see mah name
-// I wanna logout
+import React from "react";
 
-export default class Profile extends Component {
-  render() {
-    return <div>{this.props.user.username}</div>;
-  }
+export default function Profile({ username }) {
+  return (
+    <div>
+      <h1>Hi, {username}!</h1>
+      <h2>Welcome to your profile</h2>
+    </div>
+  );
 }

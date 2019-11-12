@@ -9,7 +9,11 @@ export default class AuthService {
   }
 
   login = async payload => {
-    const { data } = await this.service.post("/auth/login", payload);
+    const { username, password } = payload;
+    const { data } = await this.service.post("/auth/login", {
+      username,
+      password
+    });
     return data;
   };
 

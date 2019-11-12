@@ -4,95 +4,71 @@ import AuthService from "./api/authService";
 import { Switch, Route } from "react-router-dom";
 import Profile from "./pages/Profile";
 import PrivateRoute from "./components/PrivateRoute";
+import Loader from "./components/Loader";
+import Login from "./pages/Login";
+import NavBar from "./components/NavBar";
 
 export default class App extends Component {
   constructor() {
     super();
     this.state = {
-      username: "",
-      password: "",
       user: null,
-      err: null,
       isLoadingUser: true
     };
     this.authService = new AuthService();
   }
 
+  //Every time starts check if user session exists and retrieve user data.
   componentDidMount = async () => {
+    let user;
     try {
-      const user = await this.authService.isLoggedIn();
-      debugger;
-      this.setState({ user, err: null, isLoadingUser: false });
+      //Making the actual API call.
+      user = await this.authService.isLoggedIn();
     } catch (err) {
-      console.log(err);
-      this.setState({ isLoadingUser: false });
+      user = null;
+    } finally {
+      //Irregardless of the result we want to set state.
+      this.setUserState(user);
     }
   };
 
-  onChangeHandler = e => {
-    const { name, value } = e.target;
-    this.setState({ [name]: value });
+  setUserState = user => {
+    // If user is loggedIn state will be set with user,
+    // otherwise user will be null.
+    this.setState({ user, isLoadingUser: false, err: null });
   };
 
-  logoutUser = async () => {
+  logout = async () => {
+    //destroy session.
     try {
       const loggedOut = await this.authService.logout();
     } catch (err) {
       console.log(err);
     } finally {
-      debugger;
       this.setState({ user: null });
     }
   };
 
-  submitHandler = async e => {
-    e.preventDefault();
-    try {
-      const userInput = {
-        username: this.state.username,
-        password: this.state.password
-      };
-      const user = await this.authService.login(userInput);
-      this.setState({ user, err: null });
-    } catch (err) {
-      const { message } = err.response.data;
-      this.setState({ err: message });
-    }
-  };
-
   render() {
-    console.log(this.state);
+    // Initially we do not know yet whether an user is logged in or not so we just return a loader.
+    if (this.state.isLoadingUser)
+      return <Loader className="full-screen-loader" />;
     return (
       <div className="App">
-        <form onSubmit={this.submitHandler}>
-          <input
-            onChange={this.onChangeHandler}
-            type="text"
-            name="username"
-            placeholder="Your username"
+        <NavBar user={this.state.user} logout={this.logout} />
+        <Switch>
+          <Route
+            path="/login"
+            render={props => (
+              <Login {...props} setUserState={this.setUserState} />
+            )}
           />
-          <input
-            onChange={this.onChangeHandler}
-            type="password"
-            name="password"
-            placeholder="Your password"
+          <PrivateRoute
+            path="/profile"
+            user={this.state.user}
+            component={Profile}
           />
-          <button type="submit">Login!</button>
-        </form>
-        {this.state.err && <p>{this.state.err}</p>}
-        <p onClick={this.logoutUser}>Logout</p>
-
-        {!this.state.isLoadingUser ? (
-          <Switch>
-            <PrivateRoute
-              path="/profile"
-              user={this.state.user}
-              component={Profile}
-            />
-          </Switch>
-        ) : (
-          <p>...Loading</p>
-        )}
+        </Switch>
       </div>
     );
   }
