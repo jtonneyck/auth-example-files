@@ -58,3 +58,18 @@ nav a {
     transform: rotate(360deg);
   }
 }
+
+.flex-container {
+  display: flex;
+  justify-content: center;
+}
+
+form input,
+form button {
+  padding: 5px 20px;
+}
+form input,
+form button {
+  display: block;
+  margin: 10px auto;
+}

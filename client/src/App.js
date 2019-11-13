@@ -1,12 +1,14 @@
-import React, { Component } from "react";
-import "./App.css";
-import AuthService from "./api/authService";
-import { Switch, Route } from "react-router-dom";
-import Profile from "./pages/Profile";
-import PrivateRoute from "./components/PrivateRoute";
-import Loader from "./components/Loader";
-import Login from "./pages/Login";
-import NavBar from "./components/NavBar";
+import React, { Component } from 'react';
+import './App.css';
+import AuthService from './api/authService';
+import { Switch, Route } from 'react-router-dom';
+import Profile from './pages/Profile';
+import PrivateRoute from './components/PrivateRoute';
+import Loader from './components/Loader';
+import NavBar from './components/NavBar';
+import AuthPage from './pages/AuthPage';
+import NotFound from './pages/NotFound';
+import Home from './pages/Home';
 
 export default class App extends Component {
   constructor() {
@@ -41,7 +43,7 @@ export default class App extends Component {
   logout = async () => {
     //destroy session.
     try {
-      const loggedOut = await this.authService.logout();
+      await this.authService.logout();
     } catch (err) {
       console.log(err);
     } finally {
@@ -57,10 +59,11 @@ export default class App extends Component {
       <div className="App">
         <NavBar user={this.state.user} logout={this.logout} />
         <Switch>
+          <Route exact path="/" component={Home} />
           <Route
-            path="/login"
+            path="/auth"
             render={props => (
-              <Login {...props} setUserState={this.setUserState} />
+              <AuthPage {...props} setUserState={this.setUserState} />
             )}
           />
           <PrivateRoute
@@ -68,6 +71,7 @@ export default class App extends Component {
             user={this.state.user}
             component={Profile}
           />
+          <Route path="*" component={NotFound} />
         </Switch>
       </div>
     );

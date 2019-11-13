@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from 'axios';
 
 export default class AuthService {
   constructor() {
@@ -10,7 +10,16 @@ export default class AuthService {
 
   login = async payload => {
     const { username, password } = payload;
-    const { data } = await this.service.post("/auth/login", {
+    const { data } = await this.service.post('/auth/login', {
+      username,
+      password
+    });
+    return data;
+  };
+
+  register = async payload => {
+    const { username, password } = payload;
+    const { data } = await this.service.post('/auth/register', {
       username,
       password
     });
@@ -18,14 +27,12 @@ export default class AuthService {
   };
 
   isLoggedIn = async () => {
-    const { data } = await this.service.get("/auth/isLoggedIn");
+    const { data } = await this.service.get('/auth/isLoggedIn');
     return data;
   };
 
   logout = async () => {
-    const { data } = await this.service.get("/auth/logout");
+    const { data } = await this.service.get('/auth/logout');
     return data;
   };
-
-  // register;
 }
