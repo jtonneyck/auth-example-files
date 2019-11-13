@@ -34,8 +34,8 @@ router.post('/login', async (req, res, next) => {
 
   try {
     const user = await User.findOne({ username });
-    const password = await bcrypt.compare(password, user.password);
-    if (userFound && password) {
+    const isPassword = await bcrypt.compare(password, user.password);
+    if (user && isPassword) {
       const userProj = getUserWithOutPassword(user._doc);
       req.session.user = userProj;
       res.status(200).json(userProj);
@@ -45,6 +45,7 @@ router.post('/login', async (req, res, next) => {
         .json({ message: 'Please provide the correct credentials' });
     }
   } catch (err) {
+    console.log(err);
     res.status(500).json({ message: 'Wops something went terribly awry!' });
   }
 });
