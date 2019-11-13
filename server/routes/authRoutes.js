@@ -1,6 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
+const getUserWithOutPassword = require('./utils/userProjection');
 
 router.post('/register', async (req, res, next) => {
   const { username, password } = req.body;
@@ -11,9 +14,11 @@ router.post('/register', async (req, res, next) => {
 
   try {
     //encrpt password
-    const newUser = await User.create(req.body);
-    // dont send password back
-    res.status(200).json(newUser);
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+    const user = await User.create({ username, password: hashedPassword });
+    const userProj = getUserWithOutPassword(user._doc);
+    req.session.user = userProj;
+    res.status(200).json(userProj);
   } catch (err) {
     console.log(err);
     res.status(500).json({ message: 'Wops something went terribly awry!' });
@@ -29,9 +34,11 @@ router.post('/login', async (req, res, next) => {
 
   try {
     const user = await User.findOne({ username });
-    if (user && user.password === password) {
-      req.session.user = user;
-      res.status(200).json(user);
+    const password = await bcrypt.compare(password, user.password);
+    if (userFound && password) {
+      const userProj = getUserWithOutPassword(user._doc);
+      req.session.user = userProj;
+      res.status(200).json(userProj);
     } else {
       res
         .status(400)
