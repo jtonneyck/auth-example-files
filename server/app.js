@@ -12,8 +12,9 @@ const MongoStore = require('connect-mongo')(session);
 const mongoose = require('mongoose');
 const cors = require('cors');
 
+require('dotenv').config();
 mongoose
-  .connect('mongodb://localhost:27017/auth-example', {
+  .connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useCreateIndex: true
