@@ -60,6 +60,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 const authRouter = require('./routes/authRoutes');
 app.use('/api/auth', authRouter);
 
+const upload = require('./routes/upload');
+app.use('/api/upload', upload);
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));

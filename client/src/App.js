@@ -52,6 +52,7 @@ export default class App extends Component {
   };
 
   render() {
+    debugger
     // Initially we do not know yet whether an user is logged in or not so we just return a loader.
     if (this.state.isLoadingUser)
       return <Loader className="full-screen-loader" />;
