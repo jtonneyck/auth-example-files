@@ -5,6 +5,9 @@ The .env.development file should have include REACT_APP_BASE_URL=the-location-of
 
 The server/.env file needs: 
 MONGO_URI=yourmongodbconnectionstring
+
 CLOUDINARY_NAME=yourcloudinaryname
+
 CLOUDINARY_KEY=yourcloudinarykey
+
 CLOUDINARY_SECRET=yourcloudinarysecret
