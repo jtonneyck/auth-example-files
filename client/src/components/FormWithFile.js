@@ -1,17 +1,20 @@
 import React, { Component } from 'react';
 import UploadService from "../api/uploadService";
 
-export default class AuthForm extends Component {
-  constructor() {
-    super();
-    this.uploadService = new UploadService();
+export default class FormWithFile extends Component {
+  constructor(props) {
+    super(props);
     this.formRef = React.createRef();
+    this.state = {
+        err: null
+    }
   }
   submitHandler = async e => {
     e.preventDefault();
     try {
       const formData = new FormData(this.formRef.current)
-      const {profilePicture} = await this.uploadService(formData));
+      const {profilePicture} = await this.props.uploadProfilePicture(formData);
+      this.props.setUserState({username: this.props.username, profilePicture});
     } catch (err) {
       const { message } = err.response.data;
       this.setState({ err: message });
@@ -26,7 +29,7 @@ export default class AuthForm extends Component {
             type="file"
             name="picture"
           />
-          <button type="submit">{this.props.btnText}</button>
+          <button type="submit">Upload</button>
         </form>
         {this.state.err && <p className="error">{this.state.err}</p>}
       </div>

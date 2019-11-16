@@ -15,7 +15,8 @@ export default class App extends Component {
     super();
     this.state = {
       user: null,
-      isLoadingUser: true
+      isLoadingUser: true,
+      err: null
     };
     this.authService = new AuthService();
   }
@@ -35,6 +36,7 @@ export default class App extends Component {
   };
 
   setUserState = user => {
+    debugger
     // If user is loggedIn state will be set with user,
     // otherwise user will be null.
     this.setState({ user, isLoadingUser: false, err: null });
@@ -63,13 +65,15 @@ export default class App extends Component {
           <Route exact path="/" component={Home} />
           <Route
             path="/auth"
-            render={props => (
+              render={props => (
               <AuthPage {...props} setUserState={this.setUserState} />
             )}
           />
           <PrivateRoute
             path="/profile"
             user={this.state.user}
+            setUserState={this.setUserState} // from profile we can change the profile picture, 
+            // which means we need to update the user with the new profilepicture
             component={Profile}
           />
           <Route path="*" component={NotFound} />

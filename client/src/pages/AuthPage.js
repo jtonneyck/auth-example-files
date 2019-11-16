@@ -9,6 +9,7 @@ export default class Register extends Component {
   }
 
   render() {
+    debugger
     return (
       <div className="flex-container">
         <div>

@@ -9,7 +9,7 @@ export default class AuthService {
   }
 
   uploadProfilePicture = async payload => {
-    const { data } = await this.service.post('/auth/upload/profile-picture', payload);
+    const { data } = await this.service.post('/upload/profile-picture', payload);
     return data;
   };
 

@@ -7,11 +7,10 @@ import { Route, Redirect } from "react-router-dom";
 const protectedRoute = ({ component: Component, user, ...rest }) => {
   return (
     <Route
-      {...rest}
       render={props => {
         //render is a function that checks if the user is passed a long. If not the private route will redirect to "/"
         if (user) {
-          return <Component {...props} {...user} />;
+          return <Component {...props} {...user} {...rest} />;
         } else {
           return <Redirect to="/" />;
         }

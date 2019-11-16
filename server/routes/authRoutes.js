@@ -38,6 +38,7 @@ router.post('/login', async (req, res, next) => {
     if (user && isPassword) {
       const userProj = getUserWithOutPassword(user._doc);
       req.session.user = userProj;
+      debugger
       res.status(200).json(userProj);
     } else {
       res

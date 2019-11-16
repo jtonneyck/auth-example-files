@@ -17,6 +17,7 @@ export default class AuthForm extends Component {
 
   submitHandler = async e => {
     e.preventDefault();
+    debugger
     try {
       const user = await this.props.authService(this.state);
       this.props.setUserState(user);
@@ -28,6 +29,7 @@ export default class AuthForm extends Component {
   };
 
   render() {
+    debugger
     return (
       <div>
         <form onSubmit={this.submitHandler}>
